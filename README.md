@@ -13,6 +13,8 @@ Objective is to create a real time stock market dashboard.
   3. Density plots to show various features like price to earning ratio etc.
 - [ ] First web dashboard with all the insights.
   1. Base web application to show all the above results using SreamLit and deploy Heroku.
+- [ ] Machine Learning Problem Formulation.
+  1. Here we will come up with the problem(s) or task(s) that we can solve using ML.
 - [ ] Preprcessing
   1. Dealing with volatility in data.
   2. Dealing with Outliers and missing data.
