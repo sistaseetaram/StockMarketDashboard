@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 MostactiveLink="https://finance.yahoo.com/most-active"
 gainerLink="https://finance.yahoo.com/gainers"
 loserLink="https://finance.yahoo.com/losers"
-cryptoLink="https://finance.yahoo.com/cryptocurrencies"
 newslink="https://news.google.com/search?pz=1&cf=all&hl=en-IN&q=Finance&gl=IN&ceid=IN:en"
 
 
