@@ -2,7 +2,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from matplotlib.pyplot import title
 import requests
 from bs4 import BeautifulSoup
 
