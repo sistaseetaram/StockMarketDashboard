@@ -28,7 +28,7 @@ def app():
 
     # parsing finance website
     def parse_Website(Link):
-        page=requests.get(Link)
+        page=requests.get(Link, timeout=10)
         soup=BeautifulSoup(page.text,'html.parser')
         Stocks=pd.read_html(page.text)[0]
         Stocks=Stocks.head(5)
@@ -44,7 +44,7 @@ def app():
 
     #method to parse Lates news
     def getNews(link):
-        r=requests.get(link)
+        r=requests.get(link, timeout=10)
         html=r.content
         soup=BeautifulSoup(html,'html.parser')
         heading=soup.find_all('article',class_='MQsxIb xTewfe R7GTQ keNKEd j7vNaf Cc0Z5d EjqUne')
