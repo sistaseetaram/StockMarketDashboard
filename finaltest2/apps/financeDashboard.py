@@ -2,8 +2,6 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 import yfinance as yf
 from datetime import date
 import plotly.graph_objects as go
