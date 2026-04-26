@@ -64,7 +64,7 @@ def plot_candlestick_chart(fig, df, row, column=1, plot_EMAs=True, plot_strategy
                                  name='26-period EMA',
                                  line=dict(color='whitesmoke', width=2)),
                       row=row,
-                      col=column)    
+                      col=column)
     fig.update_xaxes(rangeslider={'visible': False})
     fig.update_yaxes(title_text='Price ($)', row=row, col=column)
     return fig
@@ -126,7 +126,7 @@ def plot_volume(fig, df, row, column=1):
     fig.update_yaxes(title_text='Volume ($)', row=row, col=column)
     return fig
 
-#main content 
+#main content
 def app():
     st.title('Finance Dashboard')
 
@@ -176,24 +176,12 @@ def app():
                     hovermode='x unified',
                     legend=dict(orientation='h',
                     xanchor='left',x=0.05,yanchor='bottom',y=1.003))
-    
+
     axis_lw, axis_color = 2, 'white'
 
-    fig.update_layout(xaxis1=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                        yaxis1=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                        font=dict(color=axis_color))
-
-    fig.update_layout(xaxis2=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                    yaxis2=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                    font=dict(color=axis_color))
-
-    fig.update_layout(xaxis3=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                    yaxis3=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                    font=dict(color=axis_color))
-
-    fig.update_layout(xaxis4=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                    yaxis4=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
-                    font=dict(color=axis_color))
+    fig.update_xaxes(linewidth=axis_lw, linecolor=axis_color, mirror=True, showgrid=False)
+    fig.update_yaxes(linewidth=axis_lw, linecolor=axis_color, mirror=True, showgrid=False)
+    fig.update_layout(font=dict(color=axis_color))
 
     #plotting the figures
     st.plotly_chart(fig)  
