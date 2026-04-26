@@ -8,6 +8,7 @@ import yfinance as yf
 from datetime import date
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from apps.utils import get_ticker_selection
 
 #setting data range for our dataset
 START = "2015-01-01"
@@ -64,7 +65,7 @@ def plot_candlestick_chart(fig, df, row, column=1, plot_EMAs=True, plot_strategy
                                  name='26-period EMA',
                                  line=dict(color='whitesmoke', width=2)),
                       row=row,
-                      col=column)    
+                      col=column)
     fig.update_xaxes(rangeslider={'visible': False})
     fig.update_yaxes(title_text='Price ($)', row=row, col=column)
     return fig
@@ -126,7 +127,7 @@ def plot_volume(fig, df, row, column=1):
     fig.update_yaxes(title_text='Volume ($)', row=row, col=column)
     return fig
 
-#main content 
+#main content
 def app():
     st.title('Finance Dashboard')
 
@@ -138,17 +139,7 @@ def app():
     ''')
 
     #logic to pick and store the selected ticker of a stock for later use
-    ticker=''
-    stocks=('GOOGLE(GOOG)', 'S&P 500 (^GSPC)', 'Microsoft Corporation (MSFT)', 'NIFTY 50 (^NSEI)')
-    selectedStock = st.selectbox('Select dataset for prediction', stocks)
-    if selectedStock=='GOOGLE(GOOG)':
-        ticker='GOOG'
-    elif selectedStock=='S&P 500 (^GSPC)':
-        ticker='^GSPC'
-    elif selectedStock=='Microsoft Corporation (MSFT)':
-        ticker='MSFT'
-    elif selectedStock=='NIFTY 50 (^NSEI)':
-        ticker='^NSEI'
+    ticker = get_ticker_selection()
 
     #message to be displayed
     data_load_state = st.text('Loading data...')
@@ -176,7 +167,7 @@ def app():
                     hovermode='x unified',
                     legend=dict(orientation='h',
                     xanchor='left',x=0.05,yanchor='bottom',y=1.003))
-    
+
     axis_lw, axis_color = 2, 'white'
 
     fig.update_layout(xaxis1=dict(linewidth=axis_lw,linecolor=axis_color,mirror=True,showgrid=False),
