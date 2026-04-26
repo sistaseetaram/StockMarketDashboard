@@ -1,7 +1,6 @@
 import streamlit as st
 from datetime import date
 
-from dateutil.easter import easter
 import yfinance as yf
 from fbprophet import Prophet
 from fbprophet.plot import plot_plotly
