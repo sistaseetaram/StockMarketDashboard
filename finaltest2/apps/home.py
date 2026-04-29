@@ -13,6 +13,18 @@ loserLink="https://finance.yahoo.com/losers"
 cryptoLink="https://finance.yahoo.com/cryptocurrencies"
 newslink="https://news.google.com/search?pz=1&cf=all&hl=en-IN&q=Finance&gl=IN&ceid=IN:en"
 
+# parsing finance website
+def parse_Website(Link):
+    # Added timeout and user-agent per memory instructions
+    headers = {"User-Agent": "Mozilla/5.0"}
+    page=requests.get(Link, headers=headers, timeout=10)
+    soup=BeautifulSoup(page.text,'html.parser')
+    Stocks=pd.read_html(page.text)[0]
+    Stocks=Stocks.head(5)
+    Stocks.columns = [c.replace(' ', '_') for c in Stocks.columns]
+    Stocks=Stocks.drop(columns=['52_Week_Range','PE_Ratio_(TTM)'])
+    return Stocks
+
 
 def app():
 
@@ -25,16 +37,6 @@ def app():
     ##### Dataset retrieved from [Yahoo! Finance](https://uk.finance.yahoo.com/).
     ___
     ''')
-
-    # parsing finance website
-    def parse_Website(Link):
-        page=requests.get(Link, timeout=10)
-        soup=BeautifulSoup(page.text,'html.parser')
-        Stocks=pd.read_html(page.text)[0]
-        Stocks=Stocks.head(5)
-        Stocks.columns = [c.replace(' ', '_') for c in Stocks.columns]
-        Stocks=Stocks.drop(columns=['52_Week_Range','PE_Ratio_(TTM)'])
-        return Stocks
 
     #adds a horizontal line
     def addline():
@@ -68,15 +70,15 @@ def app():
 
     #Presentation logic
     if mostActiveBtn:
-        st.markdown("<h2 style='text-align: left;'>Most Active</h2>", unsafe_allow_html=True)
+        st.header("Most Active")
         mostActiveStock=parse_Website(MostactiveLink)
         st.dataframe(mostActiveStock)
     elif gainersBtn:
-        st.markdown("<h2 style='text-align: left; color: Green;'>Top Gainer</h2>", unsafe_allow_html=True)
+        st.header(":green[Top Gainer]")
         gainersStock=parse_Website(gainerLink)
         st.dataframe(gainersStock)
     elif losersBtn:
-        st.markdown("<h2 style='text-align: left; color: Red;'>Top Loser</h2>", unsafe_allow_html=True)
+        st.header(":red[Top Loser]")
         loserStock=parse_Website(loserLink)
         st.dataframe(loserStock)
 
