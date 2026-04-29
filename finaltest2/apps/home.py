@@ -68,15 +68,15 @@ def app():
 
     #Presentation logic
     if mostActiveBtn:
-        st.markdown("<h2 style='text-align: left;'>Most Active</h2>", unsafe_allow_html=True)
+        st.header("Most Active")
         mostActiveStock=parse_Website(MostactiveLink)
         st.dataframe(mostActiveStock)
     elif gainersBtn:
-        st.markdown("<h2 style='text-align: left; color: Green;'>Top Gainer</h2>", unsafe_allow_html=True)
+        st.header(":green[Top Gainer]")
         gainersStock=parse_Website(gainerLink)
         st.dataframe(gainersStock)
     elif losersBtn:
-        st.markdown("<h2 style='text-align: left; color: Red;'>Top Loser</h2>", unsafe_allow_html=True)
+        st.header(":red[Top Loser]")
         loserStock=parse_Website(loserLink)
         st.dataframe(loserStock)
 
