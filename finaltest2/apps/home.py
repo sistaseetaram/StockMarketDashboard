@@ -23,6 +23,23 @@ def parse_Website(Link):
     return Stocks
 
 
+@st.cache(suppress_st_warning=True)
+def parse_Website(Link):
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    page=requests.get(Link, headers=headers)
+    soup=BeautifulSoup(page.text,'html.parser')
+    Stocks=pd.read_html(page.text)[0]
+    Stocks=Stocks.head(5)
+    Stocks.columns = [c.replace(' ', '_') for c in Stocks.columns]
+
+    # Dynamically drop columns if they exist
+    cols_to_drop = [col for col in ['52_Week_Range', 'PE_Ratio_(TTM)', '52_Wk_Range', 'P/E_Ratio_(TTM)'] if col in Stocks.columns]
+    if cols_to_drop:
+        Stocks=Stocks.drop(columns=cols_to_drop)
+
+    return Stocks
+
+
 def app():
 
     #main page contents
