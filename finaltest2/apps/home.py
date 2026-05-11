@@ -1,8 +1,6 @@
 #importing necessary libraries
 import streamlit as st
 import pandas as pd
-import numpy as np
-from matplotlib.pyplot import title
 import requests
 from bs4 import BeautifulSoup
 
@@ -10,8 +8,36 @@ from bs4 import BeautifulSoup
 MostactiveLink="https://finance.yahoo.com/most-active"
 gainerLink="https://finance.yahoo.com/gainers"
 loserLink="https://finance.yahoo.com/losers"
-cryptoLink="https://finance.yahoo.com/cryptocurrencies"
 newslink="https://news.google.com/search?pz=1&cf=all&hl=en-IN&q=Finance&gl=IN&ceid=IN:en"
+
+# parsing finance website
+def parse_Website(Link):
+    # Added timeout and user-agent per memory instructions
+    headers = {"User-Agent": "Mozilla/5.0"}
+    page=requests.get(Link, headers=headers, timeout=10)
+    soup=BeautifulSoup(page.text,'html.parser')
+    Stocks=pd.read_html(page.text)[0]
+    Stocks=Stocks.head(5)
+    Stocks.columns = [c.replace(' ', '_') for c in Stocks.columns]
+    Stocks=Stocks.drop(columns=['52_Week_Range','PE_Ratio_(TTM)'])
+    return Stocks
+
+
+@st.cache(suppress_st_warning=True)
+def parse_Website(Link):
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    page=requests.get(Link, headers=headers)
+    soup=BeautifulSoup(page.text,'html.parser')
+    Stocks=pd.read_html(page.text)[0]
+    Stocks=Stocks.head(5)
+    Stocks.columns = [c.replace(' ', '_') for c in Stocks.columns]
+
+    # Dynamically drop columns if they exist
+    cols_to_drop = [col for col in ['52_Week_Range', 'PE_Ratio_(TTM)', '52_Wk_Range', 'P/E_Ratio_(TTM)'] if col in Stocks.columns]
+    if cols_to_drop:
+        Stocks=Stocks.drop(columns=cols_to_drop)
+
+    return Stocks
 
 
 def app():
@@ -26,16 +52,6 @@ def app():
     ___
     ''')
 
-    # parsing finance website
-    def parse_Website(Link):
-        page=requests.get(Link)
-        soup=BeautifulSoup(page.text,'html.parser')
-        Stocks=pd.read_html(page.text)[0]
-        Stocks=Stocks.head(5)
-        Stocks.columns = [c.replace(' ', '_') for c in Stocks.columns]
-        Stocks=Stocks.drop(columns=['52_Week_Range','PE_Ratio_(TTM)'])
-        return Stocks
-
     #adds a horizontal line
     def addline():
         st.markdown('''
@@ -44,7 +60,7 @@ def app():
 
     #method to parse Lates news
     def getNews(link):
-        r=requests.get(link)
+        r=requests.get(link, timeout=10)
         html=r.content
         soup=BeautifulSoup(html,'html.parser')
         heading=soup.find_all('article',class_='MQsxIb xTewfe R7GTQ keNKEd j7vNaf Cc0Z5d EjqUne')
@@ -68,15 +84,15 @@ def app():
 
     #Presentation logic
     if mostActiveBtn:
-        st.markdown("<h2 style='text-align: left;'>Most Active</h2>", unsafe_allow_html=True)
+        st.header("Most Active")
         mostActiveStock=parse_Website(MostactiveLink)
         st.dataframe(mostActiveStock)
     elif gainersBtn:
-        st.markdown("<h2 style='text-align: left; color: Green;'>Top Gainer</h2>", unsafe_allow_html=True)
+        st.header(":green[Top Gainer]")
         gainersStock=parse_Website(gainerLink)
         st.dataframe(gainersStock)
     elif losersBtn:
-        st.markdown("<h2 style='text-align: left; color: Red;'>Top Loser</h2>", unsafe_allow_html=True)
+        st.header(":red[Top Loser]")
         loserStock=parse_Website(loserLink)
         st.dataframe(loserStock)
 

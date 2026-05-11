@@ -6,6 +6,7 @@ import yfinance as yf
 from fbprophet import Prophet
 from fbprophet.plot import plot_plotly
 from plotly import graph_objs as go
+from apps.utils import get_ticker_selection
 
 @st.cache
 def load_data(ticker):
@@ -25,28 +26,18 @@ TODAY = date.today().strftime("%Y-%m-%d")
 
 def app():
     st.title('Stock Forecast App')
-    
-    ticker=''
-    stocks=('GOOGLE(GOOG)', 'S&P 500 (^GSPC)', 'Microsoft Corporation (MSFT)', 'NIFTY 50 (^NSEI)')
-    selectedStock = st.selectbox('Select dataset for prediction', stocks)
-    if selectedStock=='GOOGLE(GOOG)':
-        ticker='GOOG'
-    elif selectedStock=='S&P 500 (^GSPC)':
-        ticker='^GSPC'
-    elif selectedStock=='Microsoft Corporation (MSFT)':
-        ticker='MSFT'
-    elif selectedStock=='NIFTY 50 (^NSEI)':
-        ticker='^NSEI'
+
+    ticker = get_ticker_selection()
 
     n_months = st.slider('Months of prediction:', 1, 4)
     period = n_months * 30
-    
+
     data_load_state = st.text('Loading data...')
     data = load_data(ticker)
     data_load_state.text('Loading data... done!')
 
     plot_raw_data(data)
-    
+
     # Predict forecast with Facebook Prophet
     df_train = data[['Date','Close']]
     df_train = df_train.rename(columns={"Date": "ds", "Close": "y"})
@@ -56,10 +47,10 @@ def app():
     future = m.make_future_dataframe(periods=period)
     forecast = m.predict(future)
 
-    # Show and plot forecast 
+    # Show and plot forecast
     st.subheader('Forecast data')
     st.write(forecast.tail())
-    
+
     st.write(f'Forecast plot for {n_months} months')
     fig1 = plot_plotly(m, forecast)
     st.plotly_chart(fig1)
