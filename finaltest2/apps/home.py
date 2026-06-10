@@ -26,7 +26,7 @@ def parse_Website(Link):
 @st.cache(suppress_st_warning=True)
 def parse_Website(Link):
     headers = {'User-Agent': 'Mozilla/5.0'}
-    page=requests.get(Link, headers=headers)
+    page=requests.get(Link, headers=headers, timeout=10)
     soup=BeautifulSoup(page.text,'html.parser')
     Stocks=pd.read_html(page.text)[0]
     Stocks=Stocks.head(5)
